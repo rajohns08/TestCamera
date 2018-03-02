@@ -63,8 +63,12 @@ public class MainActivity extends AppCompatActivity {
     private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] bytes, final Camera camera) {
+            // Camera preview freezes unless we restart it
+            camera.stopPreview();
+            camera.startPreview();
+            
             int rotationDegrees = rotationDegreesBasedOnCamera();
-            new RotateImageTask(camera, rotationDegrees, new ImageRotationCallback() {
+            new RotateImageTask(rotationDegrees, new ImageRotationCallback() {
                 @Override
                 public void onImageRotated(byte[] bytes) {
                     new SaveImageTask(SaveImageTask.MEDIA_TYPE_IMAGE).execute(bytes);
@@ -112,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
 
     // https://developer.android.com/reference/android/hardware/Camera.html#setDisplayOrientation(int)
     private static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
-        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-        android.hardware.Camera.getCameraInfo(cameraId, info);
+        Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         int degrees = 0;
 

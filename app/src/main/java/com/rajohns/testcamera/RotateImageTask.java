@@ -3,7 +3,6 @@ package com.rajohns.testcamera;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -11,23 +10,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class RotateImageTask extends AsyncTask<byte[], Void, byte[]> {
-    private Camera camera;
     private int rotationDegrees;
     private ImageRotationCallback imageRotationCallback;
 
-    public RotateImageTask(Camera camera, int rotationDegrees, ImageRotationCallback imageRotationCallback) {
-        this.camera = camera;
+    public RotateImageTask(int rotationDegrees, ImageRotationCallback imageRotationCallback) {
         this.rotationDegrees = rotationDegrees;
         this.imageRotationCallback = imageRotationCallback;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        // Need to refresh camera preview after calling camera.takePicture,
-        // but for some reason if I do it in the Activity it causes camera to get
-        // garbage collected before picture callback hits.
-        camera.stopPreview();
-        camera.startPreview();
     }
 
     @Override
